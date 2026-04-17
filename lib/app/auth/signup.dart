@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noteapp_php/components/crud.dart';
 import 'package:noteapp_php/components/customtextform.dart';
+import 'package:noteapp_php/components/valid.dart';
 import 'package:noteapp_php/constant/linkapi.dart';
 
 class Signup extends StatefulWidget {
@@ -15,23 +16,31 @@ class _SignupState extends State<Signup> {
   bool isloading = false;
 
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
+
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   signup() async {
-    isloading = true;
-    setState(() {});
-    var response = await _crud.postRequest(LinkSignup, {
-      "username": usernameController.text,
-      "email": emailController.text,
-      "password": passwordController.text,
-    });
-    if (response["status"] == "success") {
-      Navigator.of(context).pushNamedAndRemoveUntil("home", (route) => false);
-    } else {
-      isloading = false;
-      print("Signup fail");
+    if (formstate.currentState!.validate()) {
+      isloading = true;
+      setState(() {});
+      var response = await _crud.postRequest(LinkSignup, {
+        "username": usernameController.text,
+        "email": emailController.text,
+        "password": passwordController.text,
+      });
+      if (response["status"] == "success") {
+        Navigator.of(
+          context,
+        ).pushNamedAndRemoveUntil("success", (route) => false);
+      } else {
+        setState(() {
+          isloading = false;
+        });
+        print("Signup fail");
+      }
+
     }
   }
 
@@ -53,16 +62,26 @@ class _SignupState extends State<Signup> {
                       const SizedBox(height: 25),
 
                       Customtextform(
+                        valid: (val) {
+                          return validInput(val!, 3, 20, "username");
+                        },
+
                         labelText: "Username",
                         controller: usernameController,
                       ),
                       const SizedBox(height: 20),
                       Customtextform(
+                        valid: (val) {
+                          return validInput(val!, 5, 50, "email");
+                        },
                         labelText: "Email",
                         controller: emailController,
                       ),
                       const SizedBox(height: 20),
                       Customtextform(
+                        valid: (val) {
+                          return validInput(val!, 5, 30, "password");
+                        },
                         labelText: "Password",
                         controller: passwordController,
                       ),

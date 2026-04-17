@@ -17,7 +17,7 @@ class Crud {
   }
 
   postRequest(String url, Map data) async {
-    // تأخير 5 ثوني
+    // تأخير3 ثوني
     await Future.delayed(Duration(seconds: 3));
     try {
       var response = await http.post(Uri.parse(url), body: data);
