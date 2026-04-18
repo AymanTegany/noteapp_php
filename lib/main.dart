@@ -6,7 +6,7 @@ import 'package:noteapp_php/app/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late SharedPreferences sharedPref;
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   sharedPref = await SharedPreferences.getInstance();
   runApp(const MyApp());
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "login",
+      initialRoute: sharedPref.getString("id") == null ? "login" : "home",
       routes: {
         "login": (context) => Login(),
         "signup": (context) => Signup(),

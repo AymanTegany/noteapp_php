@@ -17,18 +17,19 @@ class Crud {
   }
 
   postRequest(String url, Map data) async {
-    // تأخير3 ثوني
-    await Future.delayed(Duration(seconds: 3));
     try {
       var response = await http.post(Uri.parse(url), body: data);
       if (response.statusCode == 200) {
         var responsebody = jsonDecode(response.body);
         return responsebody;
       } else {
-        print("Error ${response.statusCode}");
+        print("Error Status Code: ${response.statusCode}");
+        print("Response Body: ${response.body}");
+        return {"status": "fail", "message": "Server Error ${response.statusCode}"};
       }
     } catch (e) {
       print("Error Catch $e");
+      return {"status": "fail", "message": "Catch Error: $e"};
     }
   }
 }

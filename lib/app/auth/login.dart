@@ -31,9 +31,9 @@ class _LoginState extends State<Login> {
         "password": passwordController.text,
       });
       if (response["status"] == "success") {
-        sharedPref.setString("id", response["id"]);
-        sharedPref.setString("username", response["username"]);
-        sharedPref.setString("email", response["email"]);
+        sharedPref.setString("id", response['data']['id'].toString());
+        sharedPref.setString("username", response['data']['username']);
+        sharedPref.setString("email", response['data']['email']);
         Navigator.of(context).pushNamedAndRemoveUntil("home", (route) => false);
       } else {
         setState(() {
@@ -47,7 +47,6 @@ class _LoginState extends State<Login> {
           btnCancelOnPress: () {},
         ).show();
       }
-
     }
   }
 
@@ -58,8 +57,10 @@ class _LoginState extends State<Login> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Center(
-              child: Padding(
+              child: Container(
                 padding: const EdgeInsets.all(18.0),
+                width: 600,
+                height: 600,
                 child: Form(
                   key: formstate,
                   child: Column(
@@ -84,19 +85,24 @@ class _LoginState extends State<Login> {
                       ),
                       const SizedBox(height: 20),
 
-                      ElevatedButton(
-                        onPressed: () async {
-                          await login();
-                        },
-                        child: const Text("Login"),
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
 
-                      SizedBox(height: 50),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed("signup");
-                        },
-                        child: const Text("Sign Up page"),
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              await login();
+                            },
+                            child: const Text("Login"),
+                          ),
+                          SizedBox(width: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed("signup");
+                            },
+                            child: const Text("Sign Up page"),
+                          ),
+                        ],
                       ),
                     ],
                   ),
